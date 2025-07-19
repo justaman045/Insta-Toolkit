@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id         String         @id @default(cuid())
+  name       String?
+  email      String         @unique
+  password   String
+
+  followers       Follower[]
+  following       Following[]
+  nonFollowers    NonFollower[]
+  pendingRequests PendingRequest[]
+}
+
+model Follower {
+  id          Int      @id @default(autoincrement())
+  username    String
+  href        String
+  followedAt  String
+  userId      String
+  uploadBatch Int
+  uploadedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Following {
+  id          Int      @id @default(autoincrement())
+  username    String
+  href        String
+  followedAt  String
+  userId      String
+  uploadBatch Int
+  uploadedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NonFollower {
+  id          Int      @id @default(autoincrement())
+  username    String
+  href        String
+  userId      String
+  uploadBatch Int
+  uploadedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PendingRequest {
+  id          Int      @id @default(autoincrement())
+  username    String
+  href        String
+  timestamp   String
+  userId      String
+  uploadBatch Int
+  uploadedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
