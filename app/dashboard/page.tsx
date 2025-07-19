@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/authOptions'
 import { redirect } from 'next/navigation'
-import { getUserStats } from '@/lib/getStats' // <-- new import
+import { getUserStats } from '@/lib/getStats'
 import LogoutButton from './logout-button'
 import UploadBox from './upload-box'
 

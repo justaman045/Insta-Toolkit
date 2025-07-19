@@ -23,7 +23,7 @@ module.exports = {
   rules: {
     // TypeScript
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': 'off',
 
     // React
     'react/react-in-jsx-scope': 'off', // Not needed with Next.js

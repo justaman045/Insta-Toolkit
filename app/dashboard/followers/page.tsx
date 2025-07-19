@@ -16,6 +16,10 @@ type UploadStats = {
   percentChange: number
 }
 
+type DiffResponse = {
+  previous: { username: string }[]
+}
+
 export default function FollowersPage() {
   const [followers, setFollowers] = useState<Follower[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -40,18 +44,18 @@ export default function FollowersPage() {
         }
       }).filter((f: Follower) => !!f.username)
 
-      // Fetch previous batch from the API
+      // Fetch previous batch from the API with correct types
       const res = await fetch(`/api/followers/diff?userId=${userId}`)
-      const { previous } = await res.json()
+      const data: DiffResponse = await res.json()
 
-      const previousUsernames = new Set(previous.map((f: any) => f.username))
-      const currentUsernames = new Set(parsed.map(f => f.username))
+      const previousUsernames = new Set<string>(data.previous.map(f => f.username))
+      const currentUsernames = new Set<string>(parsed.map(f => f.username))
 
       const added = [...currentUsernames].filter(x => !previousUsernames.has(x))
       const removed = [...previousUsernames].filter(x => !currentUsernames.has(x))
 
-      const percentChange = previous.length > 0
-        ? ((parsed.length - previous.length) / previous.length) * 100
+      const percentChange = data.previous.length > 0
+        ? ((parsed.length - data.previous.length) / data.previous.length) * 100
         : 100
 
       setStats({
@@ -71,8 +75,12 @@ export default function FollowersPage() {
         body: JSON.stringify({ userId, followers: parsed }),
       })
 
-    } catch (err) {
-      setError('Invalid followers_1.json format.')
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('Invalid followers_1.json format.')
+      }
       console.error(err)
     }
   }
@@ -97,7 +105,10 @@ export default function FollowersPage() {
         <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 p-4 rounded-xl mb-6">
           <h3 className="text-lg font-semibold mb-2">📊 Upload Summary</h3>
           <p>Total Followers: {stats.total}</p>
-          <p>New: <span className="text-green-500">+{stats.added}</span> | Removed: <span className="text-red-500">-{stats.removed}</span></p>
+          <p>
+            New: <span className="text-green-500">+{stats.added}</span> | Removed:{' '}
+            <span className="text-red-500">-{stats.removed}</span>
+          </p>
           <p className="text-blue-600">Change: {stats.percentChange}%</p>
         </div>
       )}
@@ -105,8 +116,16 @@ export default function FollowersPage() {
       {followers.length > 0 ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
           {followers.map((f, idx) => (
-            <div key={idx} className="bg-white dark:bg-gray-800 border dark:border-gray-700 p-4 rounded-xl shadow hover:shadow-md transition">
-              <a href={f.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+            <div
+              key={idx}
+              className="bg-white dark:bg-gray-800 border dark:border-gray-700 p-4 rounded-xl shadow hover:shadow-md transition"
+            >
+              <a
+                href={f.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+              >
                 @{f.username}
               </a>
               <p className="text-sm text-gray-500 dark:text-gray-400">Followed on {f.followedAt}</p>
@@ -114,7 +133,9 @@ export default function FollowersPage() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 dark:text-gray-400 italic">No data yet. Upload your followers file to get started.</p>
+        <p className="text-gray-500 dark:text-gray-400 italic">
+          No data yet. Upload your followers file to get started.
+        </p>
       )}
     </div>
   )
