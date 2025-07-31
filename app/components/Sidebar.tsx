@@ -8,7 +8,7 @@ import ThemeToggle from '@/app/components/ThemeToggle' // ✅ Import toggle
 
 const navItems = [
   { label: 'Dashboard', href: '/dashboard' },
-  { label: 'Upload ZIP', href: '/uploadzip' },
+  // { label: 'Upload ZIP', href: '/uploadzip' },
   { label: 'Followers', href: '/dashboard/followers' },
   { label: 'Following', href: '/dashboard/following' },
   { label: 'Non-Followers', href: '/dashboard/nonfollowers' },

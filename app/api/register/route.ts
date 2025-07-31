@@ -5,6 +5,7 @@ const prisma = new PrismaClient()
 
 export async function POST(req: Request) {
   const body = await req.json()
+  console.log('Received data:', body)
   const { name, email, password } = body
 
   if (!email || !password || !name) {
