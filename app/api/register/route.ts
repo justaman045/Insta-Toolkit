@@ -32,6 +32,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ message: 'User created' }), { status: 201 })
   } catch (err) {
     console.error("Register API error:", err)
-    return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 500 })
+    return new Response(JSON.stringify({ error: "Something went wrong."+err }), { status: 500 })
   }
 }
