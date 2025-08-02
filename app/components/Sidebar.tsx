@@ -12,7 +12,8 @@ const navItems = [
   { label: 'Followers', href: '/dashboard/followers' },
   { label: 'Following', href: '/dashboard/following' },
   { label: 'Non-Followers', href: '/dashboard/nonfollowers' },
-  { label: 'Pending Requests', href: '/dashboard/pending' }
+  { label: 'Pending Requests', href: '/dashboard/pending' },
+  { label: 'Clear Database Data', href: '/dashboard/flush' },
 ]
 
 export default function Sidebar() {
